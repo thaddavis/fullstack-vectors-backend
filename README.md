@@ -29,3 +29,8 @@ The accompanying backend repo for the "Retrieval Augmented Generation (RAG) with
 ## Redis - setting up the container
 
 - docker run --network agent-network --name agent-memory -p 6739:6739 -d redis
+
+## How to save versions of top-level packages
+
+- pip install pipreqs
+- pipreqs . --force

@@ -16,11 +16,11 @@
       }
     },
     "forwardPorts": [
-      5678
+      4000
     ],
-    "appPort": 5678,
+    "appPort": 4000,
     "workspaceMount": "source=${localWorkspaceFolder},target=/code,type=bind,consistency=delegated",
-    "workspaceFolder": "/code",
-    "runArgs": [ "--network=your-local-network-of-containers" ]
+    "workspaceFolder": "/code"
+    // "runArgs": [ "--network=your-local-network-of-containers" ]
   }
   

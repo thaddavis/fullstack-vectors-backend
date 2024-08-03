@@ -13,3 +13,4 @@ redis
 chromadb
 langchainhub
 google-search-results
+langchain_community

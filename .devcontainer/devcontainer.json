@@ -20,7 +20,7 @@
     ],
     "appPort": 4000,
     "workspaceMount": "source=${localWorkspaceFolder},target=/code,type=bind,consistency=delegated",
-    "workspaceFolder": "/code"
-    // "runArgs": [ "--network=your-local-network-of-containers" ]
+    "workspaceFolder": "/code",
+    "runArgs": [ "--network=agent-network" ]
   }
   

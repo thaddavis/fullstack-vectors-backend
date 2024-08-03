@@ -39,7 +39,7 @@ async def generator(sessionId: str, prompt: str):
     history = RedisChatMessageHistory(sessionId, url=os.getenv("REDIS_URL"))
 
     # Fetch the most relevant knowledge base records and include them in the prompt
-    chroma_client = chromadb.HttpClient(host="chromadb", port=9000)
+    chroma_client = chromadb.HttpClient(host="chromadb", port=8000)
     default_ef = embedding_functions.DefaultEmbeddingFunction()
     kb_collection = chroma_client.get_collection(name="rag_agent", embedding_function=default_ef)
 

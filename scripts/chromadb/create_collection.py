@@ -1,6 +1,6 @@
 import chromadb
 
-chroma_client = chromadb.HttpClient(host="chromadb", port=9000)
+chroma_client = chromadb.HttpClient(host="chromadb", port=8000)
 
 print(chroma_client.list_collections())
 

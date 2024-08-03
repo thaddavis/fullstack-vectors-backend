@@ -1,0 +1,16 @@
+FROM python:3.12-slim
+
+RUN apt-get update && apt-get install -y curl git build-essential
+
+# set the working directory
+WORKDIR /code
+
+# install dependencies
+COPY ./requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# copy the src to the folder
+COPY .vscode/launch.json ./.vscode/launch.json
+COPY ./src ./src
+
+ENV PYTHONPATH=/code/src

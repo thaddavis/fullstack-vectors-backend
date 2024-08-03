@@ -1,0 +1,15 @@
+requests
+watchfiles
+debugpy
+fastapi
+uvicorn
+python-dotenv
+langchain-anthropic
+langchain_openai
+langsmith
+langchain
+python-dotenv
+redis
+chromadb
+langchainhub
+google-search-results

@@ -42,10 +42,8 @@ async def generator(sessionId: str, prompt: str):
     embeddings = embedding_model.encode([prompt])
     embeddings_list = embeddings.tolist()
 
-    print(embeddings_list)
-
     pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
-    index = pc.Index("my-index")
+    index = pc.Index(os.getenv("PINECONE_INDEX"))
 
     results = index.query(
         vector=embeddings_list[0],

@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 api_key = os.getenv("PINECONE_API_KEY")
-index_name = "my-index"
+index_name = os.getenv("PINECONE_INDEX")
 embedding_dimensions = 384
 pc = Pinecone(api_key=api_key)
 

@@ -5,7 +5,7 @@ The accompanying backend repo for the "Retrieval Augmented Generation (RAG) with
 ## How to run the FastAPI
 
 - pip install -r requirements.txt
-- uvicorn src.main:app --host 0.0.0.0 --port 4000 --proxy-headers
+- uvicorn src.main:app --host 0.0.0.0 --port 4000 --proxy-headers --reload
 
 ## ChromaDB - setting up the container
 

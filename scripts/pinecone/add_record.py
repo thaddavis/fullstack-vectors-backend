@@ -7,14 +7,10 @@ load_dotenv()
 
 api_key = os.getenv("PINECONE_API_KEY")
 index_name = "my-index"
-
 pc = Pinecone(api_key=api_key)
-
 index = pc.Index(index_name)
 
 print("BEFORE", index.describe_index_stats())
-
-
 
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 chunks = [{

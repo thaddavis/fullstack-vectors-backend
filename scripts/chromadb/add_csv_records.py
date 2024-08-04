@@ -8,7 +8,7 @@ collection = chroma_client.get_collection(name="rag_agent", embedding_function=d
 
 print('Record count BEFORE ->', collection.count())
 
-with open("./scratch/gptuesday_kb.csv") as kb_file:
+with open("./data/gptuesday_kb.csv") as kb_file:
     print(type(kb_file))
 
     csvreader = csv.reader(kb_file)

@@ -33,7 +33,7 @@ Useful info related to https://www.pinecone.io/
 
 ## Upload .csv of QnA's to seed the Pinecone Index
 
-- CHECK OUT: `scratch/gptuesday_kb.csv`
+- CHECK OUT: `data/gptuesday_kb.csv`
 - python scripts/pinecone/add_csv_records.py
 
 ## Add Pinecone similarity search to the R.A.G. agent

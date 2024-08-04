@@ -16,7 +16,7 @@ print("BEFORE", index.describe_index_stats())
 
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
-with open("./scratch/gptuesday_kb.csv") as kb_file:
+with open("./data/gptuesday_kb.csv") as kb_file:
     print(type(kb_file))
 
     csvreader = csv.reader(kb_file)

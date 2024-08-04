@@ -30,3 +30,14 @@ Useful info related to https://www.pinecone.io/
 - https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
   - Creates embeddings with 384 dimensions
 - python scripts/pinecone/add_record.py
+
+## Upload .csv of QnA's to seed the Pinecone Index
+
+- CHECK OUT: `scratch/gptuesday_kb.csv`
+- python scripts/pinecone/add_csv_records.py
+
+## Add Pinecone similarity search to the R.A.G. agent
+
+- CHECK OUT: `src/_4_ragAgent/router.py`
+- https://docs.pinecone.io/guides/data/query-data#using-metadata-filters-in-queries
+

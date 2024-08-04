@@ -14,9 +14,8 @@ from langchain.callbacks import LangChainTracer
 from langsmith import Client
 
 from dotenv import load_dotenv
-
-import chromadb
-from chromadb.utils import embedding_functions
+from pinecone import Pinecone
+from sentence_transformers import SentenceTransformer
 
 load_dotenv()
 
@@ -38,17 +37,22 @@ async def generator(sessionId: str, prompt: str):
 
     history = RedisChatMessageHistory(sessionId, url=os.getenv("REDIS_URL"))
 
-    # Fetch the most relevant knowledge base records and include them in the prompt
-    chroma_client = chromadb.HttpClient(host="chromadb", port=8000)
-    default_ef = embedding_functions.DefaultEmbeddingFunction()
-    kb_collection = chroma_client.get_collection(name="rag_agent", embedding_function=default_ef)
+    # For generating the query vector
+    embedding_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+    embeddings = embedding_model.encode([prompt])
+    embeddings_list = embeddings.tolist()
 
-    query_vector: List[List[float]] = default_ef([prompt])
+    print(embeddings_list)
 
-    results = kb_collection.query(
-        query_embeddings=[query_vector[0]],
-        n_results=10
-    )    
+    pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+    index = pc.Index("my-index")
+
+    results = index.query(
+        vector=embeddings_list[0],
+        top_k=3,
+        include_values=True,
+        include_metadata=True
+    )
 
     promptTemplate = ChatPromptTemplate.from_messages(
         [
@@ -58,7 +62,7 @@ async def generator(sessionId: str, prompt: str):
         ]
     )
 
-    prompt_with_relevant_knowledge = "# RELEVANT KNOWLEDGE\n\n" + "\n".join([f"Q: {r['q']}\nA: {r['a']}" for r in results['metadatas'][0]]) + "\n\n" + "# PROMPT\n\n" + prompt
+    prompt_with_relevant_knowledge = "# RELEVANT KNOWLEDGE\n\n" + "\n".join([f"Q: {r['metadata']['q']}\nA: {r['metadata']['a']}" for r in results['matches']]) + "\n\n" + "# PROMPT\n\n" + prompt
 
     messages = promptTemplate.format_messages(input=prompt_with_relevant_knowledge, history=history.messages)
 

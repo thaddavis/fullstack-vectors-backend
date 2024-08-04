@@ -3,7 +3,6 @@ from pinecone import Pinecone
 import os
 from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
-import datetime
 import time
 
 load_dotenv()

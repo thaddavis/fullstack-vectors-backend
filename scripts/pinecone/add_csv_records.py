@@ -40,7 +40,6 @@ with open("./scratch/gptuesday_kb.csv") as kb_file:
               "metadata": {
                   "q": row[0],
                   "a": row[1],
-                  # "created_at": datetime.datetime.now()
                   "created_at": int(time.time())
                   
               },
@@ -52,7 +51,6 @@ with open("./scratch/gptuesday_kb.csv") as kb_file:
               "metadata": {
                   "q": row[0],
                   "a": row[1],
-                  "created_at": datetime.datetime.now(),
                   "created_at": int(time.time())
               },
             },

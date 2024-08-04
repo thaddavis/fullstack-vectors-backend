@@ -1,5 +1,5 @@
 {
-    "name": "Python FastAPI Devcontainer",
+    "name": "R.A.G. with Pinecone Devcontainer",
     "build": {
       "dockerfile": "../Dockerfile.dev"
     },

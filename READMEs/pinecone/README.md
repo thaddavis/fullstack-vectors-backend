@@ -24,3 +24,9 @@ Useful info related to https://www.pinecone.io/
 ## Create an index (ie: a Pinecone database) where we'll store our data
 
 - python scripts/pinecone/create_index.py
+
+## Test adding a record to the index with `sentence-transformers`
+
+- https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+  - Creates embeddings with 384 dimensions
+- python scripts/pinecone/add_record.py

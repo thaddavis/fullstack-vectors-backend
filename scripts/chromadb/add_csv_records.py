@@ -1,5 +1,4 @@
 import csv
-from typing import List
 import chromadb
 from chromadb.utils import embedding_functions
 

@@ -5,11 +5,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 api_key = os.getenv("PINECONE_API_KEY")
+index_name = "my-index"
+embedding_dimensions = 384
 pc = Pinecone(api_key=api_key)
 
 pc.create_index(
-    name="gptuesday",
-    dimension=2, # Replace with your model dimensions
+    name=index_name,
+    dimension=embedding_dimensions, # Replace with your model dimensions
     metric="cosine", # Replace with your model metric
     spec=ServerlessSpec(
         cloud="aws",

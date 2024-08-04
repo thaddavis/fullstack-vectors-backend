@@ -38,5 +38,5 @@ typer==0.12.3
 typing_extensions==4.12.2
 uvicorn==0.30.5
 pinecone-client>=5.0.1,<6.0
-
 python-dotenv==1.0.1
+sentence-transformers>=3.0.1,<4.0

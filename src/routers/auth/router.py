@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt
 from dotenv import load_dotenv
 import os
-from src.models import User
+from db.models import User
 from src.deps import db_dependency, bcrypt_context
 
 load_dotenv()

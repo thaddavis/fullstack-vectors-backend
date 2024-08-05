@@ -6,7 +6,7 @@ from passlib.context import CryptContext
 from jose import jwt, JWTError
 from dotenv import load_dotenv
 import os
-from .database import SessionLocal
+from .db.database import SessionLocal
 
 load_dotenv()
 

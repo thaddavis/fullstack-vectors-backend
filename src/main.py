@@ -1,13 +1,9 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from . import noRagAgent
-from . import ragAgent
-from . import reActAgent
-from . import healthcheck
-from . import auth
+from .routers import noRagAgent, ragAgent, reActAgent, healthcheck, auth
 
-from .database import Base, engine
+from .db.database import Base, engine
 
 import debugpy
 

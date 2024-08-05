@@ -40,3 +40,5 @@ uvicorn==0.30.5
 pinecone-client>=5.0.1,<6.0
 python-dotenv==1.0.1
 sentence-transformers>=3.0.1,<4.0
+psycopg==3.2.1,<4.0
+langchain-postgres==0.0.9,<1.0

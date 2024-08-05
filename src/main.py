@@ -1,9 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from . import noRagAgent
 from . import ragAgent
 from . import reActAgent
+from . import healthcheck
 
 import debugpy
 
@@ -30,3 +31,4 @@ app.add_middleware(
 app.include_router(noRagAgent.router, prefix="/streaming-with-memory-agent")
 app.include_router(ragAgent.router, prefix="/rag-agent")
 app.include_router(reActAgent.router, prefix="/react-agent")
+app.include_router(healthcheck.router, prefix="")

@@ -14,3 +14,9 @@ Info regarding PostgreSQL
 
 - docker run -it --rm --network agent-network postgres psql -h fullstack-pinecone -U postgres
 - create the db: `CREATE DATABASE fullstack_pinecone;`
+
+## Example UPDATE command
+
+UPDATE routines
+SET name = 'New Routine Name', description = 'Updated description'
+WHERE id = 1;

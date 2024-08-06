@@ -75,7 +75,8 @@ async def validate_token(authorization: str = Header(...)):
         token = authorization.split(" ")[1]
 
         decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return {'valid': True, 'user_id': decoded_token['id']}
+        # return {'valid': True, 'user_id': decoded_token['id']}
+        return {'access_token': authorization, 'token_type': 'bearer'}
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired")
     # except jwt.InvalidTokenError:

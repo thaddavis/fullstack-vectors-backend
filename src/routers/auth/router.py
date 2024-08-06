@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import os
 from db.models import User
 from src.deps import db_dependency, bcrypt_context
+from fastapi import Header
 
 load_dotenv()
 
@@ -58,9 +59,26 @@ async def create_user(db: db_dependency, create_user_request: UserCreateRequest)
 @router.post('/token', response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                                  db: db_dependency):
+    print('*** *** ***')
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate user")
     token = create_access_token(user.username, user.id, timedelta(minutes=20))
     
     return {'access_token': token, 'token_type': 'bearer'}
+
+
+@router.get('/validate-token')
+async def validate_token(authorization: str = Header(...)):
+    try:
+        # Extract the token from the 'Bearer' scheme
+        token = authorization.split(" ")[1]
+
+        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return {'valid': True, 'user_id': decoded_token['id']}
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired")
+    # except jwt.InvalidTokenError:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))

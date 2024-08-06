@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from langchain_anthropic import ChatAnthropic
+from langchain_postgres import PostgresChatMessageHistory
 from core.schemas.ChatSessionPrompt import ChatSessionPrompt
 
 import json
@@ -8,9 +9,8 @@ import os
 from fastapi.responses import StreamingResponse
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_community.chat_message_histories import RedisChatMessageHistory
 from langchain.callbacks import LangChainTracer
-from langsmith import Client
+import psycopg
 
 from dotenv import load_dotenv
 
@@ -32,9 +32,14 @@ async def generator(sessionId: str, prompt: str):
     model: str = "claude-3-sonnet-20240229"
     llm = ChatAnthropic(model_name=model, temperature=0.2, max_tokens=1024)
 
-    history = RedisChatMessageHistory(sessionId, url=os.getenv("REDIS_URL"))
-    
-    print('history.messages', history.messages)
+    conn_info = os.getenv("POSTGRES_URL")
+    sync_connection = psycopg.connect(conn_info)
+
+    history = PostgresChatMessageHistory(
+        'chat_history', # table name
+        sessionId,
+        sync_connection=sync_connection
+    )
 
     promptTemplate = ChatPromptTemplate.from_messages(
         [

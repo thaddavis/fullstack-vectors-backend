@@ -1,12 +1,12 @@
 from typing import List
 from fastapi import APIRouter
-from langchain_anthropic import ChatAnthropic
 
 from .tools import serp_tool
 from core.schemas.ChatSessionPrompt import ChatSessionPrompt
 
 import json
 import os
+import psycopg
 
 from fastapi.responses import StreamingResponse
 
@@ -16,7 +16,7 @@ from langsmith import Client
 from langchain import hub
 from langchain.agents import AgentExecutor, create_openai_tools_agent
 from langchain_openai import ChatOpenAI
-from langchain_community.chat_message_histories import RedisChatMessageHistory
+from langchain_postgres import PostgresChatMessageHistory
 from langchain.memory import ConversationBufferMemory
 
 from dotenv import load_dotenv
@@ -36,11 +36,6 @@ callbacks = [
 router = APIRouter()
 
 async def generator(sessionId: str, prompt: str):
-    print("-> generator <-")
-
-    # model: str = "claude-3-sonnet-20240229"
-    # llm = ChatAnthropic(model_name=model, temperature=0.2, max_tokens=1024)
-
     llm = ChatOpenAI(temperature=0, streaming=True)
 
     # Get the prompt to use - you can modify this!
@@ -50,12 +45,17 @@ async def generator(sessionId: str, prompt: str):
         llm.with_config({"tags": ["agent_llm"]}), tools, prompt_template
     )
     
-    message_history = RedisChatMessageHistory(
-        url=os.getenv("REDIS_URL"), ttl=600, session_id=sessionId
+    conn_info = os.getenv("POSTGRES_URL")
+    sync_connection = psycopg.connect(conn_info)
+
+    message_history = PostgresChatMessageHistory(
+        'chat_history', # table name
+        sessionId,
+        sync_connection=sync_connection
     )
     
     memory = ConversationBufferMemory(
-        memory_key="chat_history", chat_memory=message_history, return_messages=True
+        memory_key="chat_history", chat_memory=message_history, return_messages=True, output_key="output"
     )
 
     agent_executor = AgentExecutor(agent=agent, tools=tools, memory=memory).with_config(

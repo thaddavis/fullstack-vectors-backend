@@ -72,7 +72,6 @@ async def validate_token(authorization: str = Header(...)):
     try:
         # Extract the token from the 'Bearer' scheme
         token = authorization.split(" ")[1]
-
         decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         # return {'valid': True, 'user_id': decoded_token['id']}
         return {'access_token': authorization, 'token_type': 'bearer'}

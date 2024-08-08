@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from langchain_anthropic import ChatAnthropic
-from langchain_postgres import PostgresChatMessageHistory
+# from langchain_postgres import PostgresChatMessageHistory
 from core.schemas.ChatSessionPrompt import ChatSessionPrompt
 
 import json
@@ -32,14 +32,14 @@ async def generator(sessionId: str, prompt: str):
     model: str = "claude-3-sonnet-20240229"
     llm = ChatAnthropic(model_name=model, temperature=0.2, max_tokens=1024)
 
-    conn_info = os.getenv("POSTGRES_URL")
-    sync_connection = psycopg.connect(conn_info)
+    # conn_info = os.getenv("POSTGRES_URL")
+    # sync_connection = psycopg.connect(conn_info)
 
-    history = PostgresChatMessageHistory(
-        'chat_history', # table name
-        sessionId,
-        sync_connection=sync_connection
-    )
+    # history = PostgresChatMessageHistory(
+    #     'chat_history', # table name
+    #     sessionId,
+    #     sync_connection=sync_connection
+    # )
 
     promptTemplate = ChatPromptTemplate.from_messages(
         [
@@ -49,11 +49,12 @@ async def generator(sessionId: str, prompt: str):
         ]
     )
 
-    messages = promptTemplate.format_messages(input=prompt, history=history.messages)
+    # messages = promptTemplate.format_messages(input=prompt, history=history.messages)
+    messages = promptTemplate.format_messages(input=prompt)
 
     async for evt in llm.astream_events(messages, version="v1", config={"callbacks": callbacks}, model=model):
         if evt["event"] == "on_chat_model_start":
-            history.add_user_message(prompt)
+            # history.add_user_message(prompt)
 
             yield json.dumps({
                 "event": "on_chat_model_start"
@@ -66,7 +67,7 @@ async def generator(sessionId: str, prompt: str):
             }, separators=(',', ':'))
 
         elif evt["event"] == "on_chat_model_end":
-            history.add_ai_message(evt['data']['output'].content)
+            # history.add_ai_message(evt['data']['output'].content)
 
             yield json.dumps({
                 "event": "on_chat_model_end"

@@ -17,7 +17,7 @@ COPY ./src ./src
 
 ENV PYTHONPATH=/code/src
 
-EXPOSE 4000
+EXPOSE 8080
 
 # start the server
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "4000", "--proxy-headers"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8080", "--proxy-headers"]

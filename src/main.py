@@ -9,7 +9,7 @@ import debugpy
 
 load_dotenv()
 
-debugpy.listen(("0.0.0.0", 5678))
+# debugpy.listen(("0.0.0.0", 5678))
 # debugpy.wait_for_client()
 
 app = FastAPI()
@@ -18,9 +18,7 @@ Base.metadata.create_all(bind=engine)
 
 origins = [
     "http://localhost:3000",
-    "https://localhost:3000",
-    "https://127.0.0.1:3000",
-    "https://fullstack-rag-fastapi-service-esw7hvt5nq-ue.a.run.app",
+    "https://fullstack-rag-nextjs-service-esw7hvt5nq-ue.a.run.app",
 ]
 
 app.add_middleware(

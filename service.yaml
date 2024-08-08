@@ -9,7 +9,7 @@ spec:
   template:
     spec:
       containers:
-        - image: us-central1-docker.pkg.dev/fullstack-rag/fullstack-rag-fastapi/fullstack-rag-fastapi:latest
+        - image: us-central1-docker.pkg.dev/fullstack-rag/fullstack-rag-fastapi/fullstack-rag-fastapi
           env:
             - name: ANTHROPIC_API_KEY
               valueFrom:

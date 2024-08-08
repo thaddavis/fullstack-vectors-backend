@@ -47,3 +47,4 @@ Documenting steps of deploying `Fullstack R.A.G.` to GCP
 - `touch gcr-service-policy.yaml`
 - `gcloud run services set-iam-policy fullstack-rag-fastapi-service gcr-service-policy.yaml --region us-east1`
 
+## 

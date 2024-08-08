@@ -1,5 +1,5 @@
 {
-    "name": "R.A.G. with Pinecone Devcontainer",
+    "name": "Fullstack R.A.G. Devcontainer",
     "build": {
       "dockerfile": "../Dockerfile.dev"
     },

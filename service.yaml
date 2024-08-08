@@ -2,11 +2,14 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: fullstack-rag-fastapi-service
+  annotations:
+    # Adding a unique annotation to force a redeployment
+    updated-at: "2024-08-08T14:40:49"
 spec:
   template:
     spec:
       containers:
-        - image: us-central1-docker.pkg.dev/fullstack-rag/fullstack-rag-fastapi/fullstack-rag-fastapi
+        - image: us-central1-docker.pkg.dev/fullstack-rag/fullstack-rag-fastapi/fullstack-rag-fastapi:latest
           env:
             - name: ANTHROPIC_API_KEY
               valueFrom:
@@ -27,6 +30,21 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: AUTH_ALGORITHM
+                  key: latest
+            - name: LANGCHAIN_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: LANGCHAIN_ENDPOINT
+                  key: latest
+            - name: LANGCHAIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: LANGCHAIN_API_KEY
+                  key: latest
+            - name: SERPER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: SERPER_API_KEY
                   key: latest
           ports:
             - containerPort: 4000

@@ -18,7 +18,7 @@ Base.metadata.create_all(bind=engine)
 
 origins = [
     "http://localhost:3000",
-    "http://agents.com:3000",
+    "https://fullstack-rag-fastapi-service-esw7hvt5nq-ue.a.run.app",
 ]
 
 app.add_middleware(

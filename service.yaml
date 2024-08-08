@@ -4,12 +4,12 @@ metadata:
   name: fullstack-rag-fastapi-service
   annotations:
     # Adding a unique annotation to force a redeployment
-    updated-at: "2024-08-08T14:40:49"
+    updated-at: "2024-08-08T15:30:00"
 spec:
   template:
     spec:
       containers:
-        - image: us-central1-docker.pkg.dev/fullstack-rag/fullstack-rag-fastapi/fullstack-rag-fastapi
+        - image: us-central1-docker.pkg.dev/fullstack-rag/fullstack-rag-fastapi/fullstack-rag-fastapi:latest
           env:
             - name: ANTHROPIC_API_KEY
               valueFrom:

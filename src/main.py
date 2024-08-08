@@ -19,6 +19,7 @@ Base.metadata.create_all(bind=engine)
 origins = [
     "http://localhost:3000",
     "https://localhost:3000",
+    "https://127.0.0.1:3000",
     "https://fullstack-rag-fastapi-service-esw7hvt5nq-ue.a.run.app",
 ]
 

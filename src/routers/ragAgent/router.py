@@ -15,7 +15,7 @@ from langsmith import Client
 
 from dotenv import load_dotenv
 from pinecone import Pinecone
-from sentence_transformers import SentenceTransformer
+# from sentence_transformers import SentenceTransformer
 
 load_dotenv()
 

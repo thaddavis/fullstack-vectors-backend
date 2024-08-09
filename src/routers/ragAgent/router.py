@@ -9,7 +9,7 @@ import psycopg
 from fastapi.responses import StreamingResponse
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-# from langchain_postgres import PostgresChatMessageHistory
+from langchain_postgres import PostgresChatMessageHistory
 from langchain.callbacks import LangChainTracer
 from langsmith import Client
 
@@ -35,19 +35,24 @@ async def generator(sessionId: str, prompt: str):
     model: str = "claude-3-sonnet-20240229"
     llm = ChatAnthropic(model_name=model, temperature=0.2, max_tokens=1024)
 
-    # conn_info = os.getenv("POSTGRES_URL")
-    # sync_connection = psycopg.connect(conn_info)
+    conn_info = os.getenv("POSTGRES_URL")
+    sync_connection = psycopg.connect(conn_info)
 
-    # history = PostgresChatMessageHistory(
-    #     'chat_history', # table name
-    #     sessionId,
-    #     sync_connection=sync_connection
-    # )
+    history = PostgresChatMessageHistory(
+        'chat_history', # table name
+        sessionId,
+        sync_connection=sync_connection
+    )
 
-    # For generating the query vector
+    # vvv FOR GENERATING EMBEDDINGS WITH HUGGING FACE vvv
     # embedding_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
     # embeddings = embedding_model.encode([prompt])
     # embeddings_list = embeddings.tolist()
+    # ^^^ FOR GENERATING EMBEDDINGS WITH HUGGING FACE ^^^
+
+    # vvv FOR GENERATING EMBEDDINGS WITH OPENAI vvv
+
+    # ^^^ FOR GENERATING EMBEDDINGS WITH OPENAI ^^^
 
     # pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
     # index = pc.Index(os.getenv("PINECONE_INDEX"))
@@ -74,12 +79,11 @@ async def generator(sessionId: str, prompt: str):
 
     prompt_with_relevant_knowledge = "# RELEVANT KNOWLEDGE\n\n" + "\n".join([f"Q: {r['metadata']['q']}\nA: {r['metadata']['a']}" for r in results['matches']]) + "\n\n" + "# PROMPT\n\n" + prompt
 
-    # messages = promptTemplate.format_messages(input=prompt_with_relevant_knowledge, history=history.messages)
-    messages = promptTemplate.format_messages(input=prompt_with_relevant_knowledge)
+    messages = promptTemplate.format_messages(input=prompt_with_relevant_knowledge, history=history.messages)
 
     async for evt in llm.astream_events(messages, version="v1", config={"callbacks": callbacks}, model=model):
         if evt["event"] == "on_chat_model_start":
-            # history.add_user_message(prompt)
+            history.add_user_message(prompt)
 
             yield json.dumps({
                 "event": "on_chat_model_start"
@@ -92,7 +96,7 @@ async def generator(sessionId: str, prompt: str):
             }, separators=(',', ':'))
 
         elif evt["event"] == "on_chat_model_end":
-            # history.add_ai_message(evt['data']['output'].content)
+            history.add_ai_message(evt['data']['output'].content)
 
             yield json.dumps({
                 "event": "on_chat_model_end"

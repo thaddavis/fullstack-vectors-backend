@@ -33,7 +33,7 @@ jobs:
 
       - name: Build and Push Container
         run: |-
-          docker build -t "${{ env.ARTIFACTORY_URL }}:${{ github.sha }}" ./
+          docker build -f Dockerfile.prod -t "${{ env.ARTIFACTORY_URL }}:${{ github.sha }}" ./
           docker push "${{ env.ARTIFACTORY_URL }}:${{ github.sha }}"
 
       # END - Docker auth and build

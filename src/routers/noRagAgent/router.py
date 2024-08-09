@@ -53,7 +53,7 @@ async def generator(sessionId: str, prompt: str):
 
     async for evt in llm.astream_events(messages, version="v1", config={"callbacks": callbacks}, model=model):
         if evt["event"] == "on_chat_model_start":
-            # history.add_user_message(prompt)
+            history.add_user_message(prompt)
 
             yield json.dumps({
                 "event": "on_chat_model_start"
@@ -66,7 +66,7 @@ async def generator(sessionId: str, prompt: str):
             }, separators=(',', ':'))
 
         elif evt["event"] == "on_chat_model_end":
-            # history.add_ai_message(evt['data']['output'].content)
+            history.add_ai_message(evt['data']['output'].content)
 
             yield json.dumps({
                 "event": "on_chat_model_end"

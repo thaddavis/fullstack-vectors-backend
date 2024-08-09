@@ -27,5 +27,7 @@ Documenting high-level steps of preparing project for YouTube video
 
   CREATE INDEX IF NOT EXISTS {index_name} ON {table_name} (session_id); √
   ```
-- 
-https://github.com/langchain-ai/langchain-postgres
+- https://github.com/langchain-ai/langchain-postgres
+- Deployed both the `fullstack-rag-frontend` & `fullstack-rag-backend` to GCP Cloud Run
+- Setup CICD with GitHub Actions for both frontend and backend
+- Breaking out separate microservice for Hugging Face powered embeddings

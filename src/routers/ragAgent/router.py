@@ -15,7 +15,7 @@ from langsmith import Client
 
 from dotenv import load_dotenv
 from pinecone import Pinecone
-# from sentence_transformers import SentenceTransformer
+import aiohttp
 
 load_dotenv()
 
@@ -44,33 +44,33 @@ async def generator(sessionId: str, prompt: str):
         sync_connection=sync_connection
     )
 
-    # vvv FOR GENERATING EMBEDDINGS WITH HUGGING FACE vvv
-    # embedding_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
-    # embeddings = embedding_model.encode([prompt])
-    # embeddings_list = embeddings.tolist()
-    # ^^^ FOR GENERATING EMBEDDINGS WITH HUGGING FACE ^^^
+    embedding = None
+    async with aiohttp.ClientSession() as session:
+        url = "http://embeddings-api:7000/huggingface/embedding"
+        payload = {
+            "input": prompt
+        }
+        async with session.post(url, json=payload) as response:
+            result = await response.json()
+            embedding = result['embedding']
 
-    # vvv FOR GENERATING EMBEDDINGS WITH OPENAI vvv
+    pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+    index = pc.Index(os.getenv("PINECONE_INDEX"))
 
-    # ^^^ FOR GENERATING EMBEDDINGS WITH OPENAI ^^^
+    results = index.query(
+        vector=embedding,
+        top_k=3,
+        include_values=True,
+        include_metadata=True
+    )
 
-    # pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
-    # index = pc.Index(os.getenv("PINECONE_INDEX"))
-
-    # results = index.query(
-    #     vector=embeddings_list[0],
-    #     top_k=3,
-    #     include_values=True,
-    #     include_metadata=True
-    # )
-
-    results = {
-        "matches": []
-    }
+    # results = {
+    #     "matches": []
+    # }
 
     promptTemplate = ChatPromptTemplate.from_messages(
         [
-            ("system", "You're an assistant."),
+            ("system", "You're a helpful assistant who reports factually accurate information related to the GPTuesday community. If information is not provided in the knowledge base regarding the prompt then do NOT fabricate an answer. Bold key terms in your responses."),
             MessagesPlaceholder(variable_name="history"),
             ("human", "{input}"),
         ]

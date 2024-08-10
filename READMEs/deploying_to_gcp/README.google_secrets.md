@@ -11,6 +11,8 @@
 - ie: `echo -n "langsmith endpoint" | gcloud secrets create LANGCHAIN_ENDPOINT --data-file=-`
 - ie: `echo -n "langsmith API keys" | gcloud secrets create LANGCHAIN_API_KEY --data-file=-`
 - ie: `echo -n "embedding api url" | gcloud secrets create EMBEDDING_API_URL --data-file=-`
+- ie: `echo -n "pinecone api key" | gcloud secrets create PINECONE_API_KEY --data-file=-`
+- ie: `echo -n "pinecone index" | gcloud secrets create PINECONE_INDEX --data-file=-`
 
 - CHECK OUT: `https://console.cloud.google.com/security/secret-manager?project=fullstack-rag`
 
@@ -41,5 +43,13 @@
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 - gcloud secrets add-iam-policy-binding EMBEDDING_API_URL \
+  --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+
+- gcloud secrets add-iam-policy-binding PINECONE_API_KEY \
+  --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+
+- gcloud secrets add-iam-policy-binding PINECONE_INDEX \
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"

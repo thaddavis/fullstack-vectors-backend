@@ -46,6 +46,8 @@ async def generator(sessionId: str, prompt: str):
 
     embedding = {}
     async with aiohttp.ClientSession() as session:
+        print("EMBEDDING_API_URL")
+        print(os.getenv("EMBEDDING_API_URL"))
         url = f"{os.getenv("EMBEDDING_API_URL")}/huggingface/embedding"
         payload = {
             "input": prompt

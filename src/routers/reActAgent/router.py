@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter
 
-from .tools import serp_tool
+from .tools import serp_tool, gptuesday_tool, tad_tool
 from core.schemas.ChatSessionPrompt import ChatSessionPrompt
 
 import json
@@ -40,7 +40,9 @@ async def generator(sessionId: str, prompt: str):
 
     # Get the prompt to use - you can modify this!
     prompt_template = hub.pull("hwchase17/openai-tools-agent")
-    tools = [serp_tool]
+    # tools = [serp_tool, gptuesday_tool]
+    tools = [gptuesday_tool, tad_tool]
+    
     agent = create_openai_tools_agent(
         llm.with_config({"tags": ["agent_llm"]}), tools, prompt_template
     )

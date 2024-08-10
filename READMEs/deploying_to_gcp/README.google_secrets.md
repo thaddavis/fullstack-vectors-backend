@@ -39,3 +39,6 @@
 - gcloud secrets add-iam-policy-binding LANGCHAIN_API_KEY \   
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
+- gcloud secrets add-iam-policy-binding EMBEDDING_API_URL \
+  --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"

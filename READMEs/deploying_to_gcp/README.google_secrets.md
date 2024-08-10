@@ -12,7 +12,8 @@
 - ie: `echo -n "langsmith API keys" | gcloud secrets create LANGCHAIN_API_KEY --data-file=-`
 - ie: `echo -n "embedding api url" | gcloud secrets create EMBEDDING_API_URL --data-file=-`
 - ie: `echo -n "pinecone api key" | gcloud secrets create PINECONE_API_KEY --data-file=-`
-- ie: `echo -n "pinecone index" | gcloud secrets create PINECONE_INDEX --data-file=-`
+- ie: `echo -n "openai api key" | gcloud secrets create OPENAI_API_KEY --data-file=-`
+
 
 - CHECK OUT: `https://console.cloud.google.com/security/secret-manager?project=fullstack-rag`
 
@@ -45,11 +46,24 @@
 - gcloud secrets add-iam-policy-binding EMBEDDING_API_URL \
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
-
 - gcloud secrets add-iam-policy-binding PINECONE_API_KEY \
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
-
 - gcloud secrets add-iam-policy-binding PINECONE_INDEX \
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
+
+  - gcloud secrets add-iam-policy-binding OPENAI_API_KEY \
+  --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+
+
+
+  ## Steps to add a secret
+
+  1. Add it to the Google Secrets Manager
+  2. Give the default google engine service account permissions to pull the secret at runtime
+  3. Add the reference to the new secret in the service.yaml spec
+  4. After redeploying things should work
+
+  FOR VERIFYING: https://console.cloud.google.com/run/detail/us-east1/fullstack-rag-fastapi-service/revisions?organizationId=355415429731&project=fullstack-rag

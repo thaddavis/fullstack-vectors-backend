@@ -44,14 +44,16 @@ async def generator(sessionId: str, prompt: str):
         sync_connection=sync_connection
     )
 
-    embedding = None
+    embedding = {}
     async with aiohttp.ClientSession() as session:
-        url = "http://embeddings-api:7000/huggingface/embedding"
+        url = f"{os.getenv("EMBEDDING_API_URL")}/huggingface/embedding"
         payload = {
             "input": prompt
         }
         async with session.post(url, json=payload) as response:
             result = await response.json()
+            print('--- --- ---')
+            print(result)
             embedding = result['embedding']
 
     pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))

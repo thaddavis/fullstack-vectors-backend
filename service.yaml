@@ -43,5 +43,10 @@ spec:
                 secretKeyRef:
                   name: SERPER_API_KEY
                   key: latest
+            - name: EMBEDDING_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: EMBEDDING_API_URL
+                  key: latest
           ports:
             - containerPort: 8080

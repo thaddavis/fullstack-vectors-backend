@@ -48,5 +48,15 @@ spec:
                 secretKeyRef:
                   name: EMBEDDING_API_URL
                   key: latest
+            - name: PINECONE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: PINECONE_API_KEY
+                  key: latest
+            - name: PINECONE_INDEX
+              valueFrom:
+                secretKeyRef:
+                  name: PINECONE_INDEX
+                  key: latest
           ports:
             - containerPort: 8080

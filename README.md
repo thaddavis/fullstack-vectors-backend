@@ -35,3 +35,4 @@ FastAPI for "Fullstack R.A.G." course
 - pip install pipreqs
 - pipreqs . --force
 
+

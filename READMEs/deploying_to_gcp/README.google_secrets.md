@@ -10,6 +10,7 @@
 - ie: `echo -n "hashing algorithm" | gcloud secrets create AUTH_ALGORITHM --data-file=-`
 - ie: `echo -n "langsmith endpoint" | gcloud secrets create LANGCHAIN_ENDPOINT --data-file=-`
 - ie: `echo -n "langsmith API keys" | gcloud secrets create LANGCHAIN_API_KEY --data-file=-`
+- ie: `echo -n "embedding api url" | gcloud secrets create EMBEDDING_API_URL --data-file=-`
 
 - CHECK OUT: `https://console.cloud.google.com/security/secret-manager?project=fullstack-rag`
 

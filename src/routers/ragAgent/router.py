@@ -65,7 +65,8 @@ async def generator(sessionId: str, prompt: str):
         vector=embedding,
         top_k=3,
         include_values=False,
-        include_metadata=True
+        include_metadata=True,
+        namespace='gptuesday'
     )
 
     promptTemplate = ChatPromptTemplate.from_messages(

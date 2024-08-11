@@ -137,5 +137,4 @@ async def generator(sessionId: str, prompt: str):
 
 @router.post("/completion")
 def prompt(prompt: ChatSessionPrompt):
-    print("-> POST /react-agent/completion <-")
     return StreamingResponse(generator(prompt.sessionId, prompt.content), media_type='text/event-stream')

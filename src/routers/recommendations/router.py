@@ -27,7 +27,7 @@ def workouts(user: user_dependency, query: Query):
 
     results = index.query(
         vector=embedding,
-        top_k=3,
+        top_k=9,
         include_values=False,
         include_metadata=True,
         namespace='workouts',

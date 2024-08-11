@@ -1,5 +1,7 @@
-from fastapi import APIRouter, Response, Query as FastAPIQuery
+from fastapi import APIRouter, Query as FastAPIQuery
 from pydantic import BaseModel
+from src.db.models import Workout
+from src.deps import db_dependency, user_dependency
 
 router = APIRouter()
 
@@ -7,9 +9,14 @@ class Query(BaseModel):
     query: str
 
 @router.post("/workouts")
-def workouts(query: Query, cursor: int = FastAPIQuery(...)):
-    
-    print('---> query <---', query, cursor)
+def workouts(db: db_dependency, user: user_dependency, query: Query, cursor: int | bool = FastAPIQuery(...)):
 
-    # response.status_code = 200
-    return {"status": "OK!"}
+    print('query.query', query.query)
+
+    workouts = db.query(Workout).offset(cursor).limit(8).all()
+    cursor += 8
+
+    return { 
+        'data': workouts,
+        'cursor': cursor
+    }

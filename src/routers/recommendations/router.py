@@ -30,7 +30,11 @@ def workouts(user: user_dependency, query: Query):
         top_k=3,
         include_values=False,
         include_metadata=True,
-        namespace='workouts'
+        namespace='workouts',
+        filter={
+          "created_by": {"$ne": user.get('id')}
+          # "created_by": {"$ne": "r@pirate.ai"}
+        },
     )
 
     final_results = [{'metadata': r['metadata'], 'score': r['score']} for r in results['matches']]

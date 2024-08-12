@@ -9,6 +9,8 @@ class Account(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
 
+    logins = relationship('Logins', back_populates='account')
+
     def __repr__(self):
         return f'<Account {self.email}>'
     

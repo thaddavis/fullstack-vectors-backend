@@ -47,3 +47,4 @@ psycopg[binary]>=3.2.1,<4.0
 passlib>=1.7.4,<2.0
 python-multipart>=0.0.9,<1.0
 requests>=2.32.3,<3.0
+alembic>=1.13.2,<2.0

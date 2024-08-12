@@ -9,6 +9,7 @@ import os
 from db.models import Account
 from src.deps import db_dependency, bcrypt_context
 from fastapi import Header
+from fastapi import Response
 
 load_dotenv()
 
@@ -60,7 +61,8 @@ async def create_user(db: db_dependency, create_account_request: AccountCreateRe
         print('create_user error', e)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     
-@router.post('/token', response_model=Token)
+
+@router.post('/token')
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                                  db: db_dependency):
     print("login_for_access_token")
@@ -70,7 +72,15 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate user")
     token = create_access_token(user.email, user.id, timedelta(minutes=20))
     
-    return {'access_token': token, 'token_type': 'bearer'}
+    response = Response()
+    # response.set_cookie(key="jwt", value=token, httponly=True)
+
+    
+    response.set_cookie(key="jwt", value=token, httponly=True, expires=60*20, secure=True, samesite="none", path="/") 
+    # response.set_cookie(key="jwt", value=token, httponly=True, expires=60*20, secure=True, samesite="strict", path="/") 
+    
+    # return {'access_token': token, 'token_type': 'bearer'}
+    return response
 
 
 @router.get('/validate-token')

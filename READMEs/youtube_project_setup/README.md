@@ -31,3 +31,7 @@ Documenting high-level steps of preparing project for YouTube video
 - Deployed both the `fullstack-rag-frontend` & `fullstack-rag-backend` to GCP Cloud Run
 - Setup CICD with GitHub Actions for both frontend and backend
 - Breaking out separate microservice for Hugging Face powered embeddings
+
+## Interesting links
+
+https://www.youtube.com/watch?v=F5nlMBVZxb4

@@ -44,11 +44,11 @@ def create_access_token(username: str, user_id: int, expires_delta: timedelta):
 
 # BACKGROUND JOB FOR RECORDING LOGIN
 async def record_login(account_id: int, account_email: str, ip_address: str, db):
-    print(f"Recording login for account... ")
+    print(f"Recording login for account {account_email}... ")
 
     created_at = datetime.now()
-    # log = f"{ip_address} {created_at}"
-    log = f"192.168.100.200 2023-03-01T05:22:45.123456-05:00"
+    log = f"{ip_address} {created_at}"
+    # log = f"192.168.100.200 2023-03-01T05:22:45.123456-05:00"
     
     embedding = await fetch_embedding(log) # fetch embedding from EMBEDDING_API_URL
 
@@ -115,14 +115,17 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
                                  db: db_dependency,
                                  request: Request,
                                  background_tasks: BackgroundTasks):
+    print('/login')
     account = authenticate(form_data.username, form_data.password, db)
     if not account:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate user")
     
+    print('Record the login in the background')
     # Record the login in the background
     ip_address = request.client.host
     background_tasks.add_task(record_login, account.id, account.email, ip_address, db)
 
+    print('calling create_access_token()...')
     token = create_access_token(account.email, account.id, timedelta(minutes=20))
     response = Response()    
     response.set_cookie(key="jwt", value=token, httponly=True, expires=60*20, secure=True, samesite="none", path="/") 

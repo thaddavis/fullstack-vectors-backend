@@ -159,7 +159,7 @@ def logout(response: Response):
         secure=True,
         samesite="None",
         path="/",
-        domain="fullstack-rag-nextjs-service-esw7hvt5nq-ue.a.run.app",
+        domain=".a.run.app",
         max_age=0  # Setting max_age to 0 effectively deletes the cookie
     )
     return {"message": "Logged out successfully"}

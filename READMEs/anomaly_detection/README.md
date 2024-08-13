@@ -55,3 +55,6 @@ Anomaly Detection
 ## Writing to the logins table
 
 - https://fastapi.tiangolo.com/tutorial/background-tasks/#create-a-task-function
+
+## Resetting PROD db and running migrations
+

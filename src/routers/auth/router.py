@@ -104,6 +104,7 @@ async def create_user(db: db_dependency, create_account_request: AccountCreateRe
         )
         db.add(create_account_model)
         db.commit()
+        db.refresh(create_account_model)
     except Exception as e:
         print('create_user error', e)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

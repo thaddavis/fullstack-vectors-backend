@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-from .routers import noRagAgent, ragAgent, reActAgent, healthcheck, auth, recommendations
+from .routers import noRagAgent, ragAgent, reActAgent, healthcheck, auth, recommendations, logins
 
 from .db.database import Base, engine
 
@@ -31,10 +31,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(healthcheck.router, prefix="")
+
 app.include_router(noRagAgent.router, prefix="/no-rag-agent")
 app.include_router(ragAgent.router, prefix="/rag-agent")
 app.include_router(reActAgent.router, prefix="/react-agent")
-app.include_router(healthcheck.router, prefix="")
-app.include_router(auth.router, prefix="")
-# app.include_router(workouts.router, prefix="/workouts", tags=['workouts'])
+
+app.include_router(auth.router, prefix='/auth', tags=['auth'])
+
 app.include_router(recommendations.router, prefix="/recommendations", tags=['recommendations'])
+app.include_router(logins.router, prefix="/logins", tags=['logins'])

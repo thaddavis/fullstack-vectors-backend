@@ -14,10 +14,7 @@ from pinecone import Pinecone
 
 load_dotenv()
 
-router = APIRouter(
-    prefix='/auth',
-    tags=['auth']
-)
+router = APIRouter()
 
 SECRET_KEY = os.getenv("AUTH_SECRET_KEY")
 ALGORITHM = os.getenv("AUTH_ALGORITHM")
@@ -50,8 +47,8 @@ async def record_login(account_id: int, account_email: str, ip_address: str, db)
     print(f"Recording login for account... ")
 
     created_at = datetime.now()
-    log = f"ip_address: {ip_address}, created_at: {created_at}"
-
+    log = f"{ip_address} {created_at}"
+    
     embedding = await fetch_embedding(log) # fetch embedding from EMBEDDING_API_URL
 
     print('embedding', len(embedding))
@@ -72,12 +69,14 @@ async def record_login(account_id: int, account_email: str, ip_address: str, db)
         },
     )
 
-    similarity_threshold = 0.5
+    similarity_threshold = 0.6
     is_suspicous = False
 
     if len(results['matches']) > 0:
         print("login similarity score", results['matches'][0]['score'])
         print("is_suspicious", results['matches'][0]['score'] < similarity_threshold)
+        print("log", log)
+
         is_suspicous = True if results['matches'][0]['score'] < similarity_threshold else False
 
     db.add(Logins(account_id=account_id, ip_address=ip_address,is_suspicious=is_suspicous))

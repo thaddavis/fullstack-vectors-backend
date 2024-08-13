@@ -157,7 +157,8 @@ def logout(response: Response):
         value="",
         httponly=True,
         secure=True,
-        samesite="None",
+        # samesite="None",
+        samesite="Strict",
         path="/",
         domain=".a.run.app",
         max_age=0  # Setting max_age to 0 effectively deletes the cookie

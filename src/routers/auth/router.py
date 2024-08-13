@@ -34,6 +34,10 @@ def authenticate(email: str, password: str, db):
     if not account:
         print('if not account')
         return False
+    print()
+    print('password', password)
+    print('account.hashed_password', account.hashed_password)
+    print()
     if not bcrypt_context.verify(password, account.hashed_password):
         print('if not bcrypt_context.verify')
         return False

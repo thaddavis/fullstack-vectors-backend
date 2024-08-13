@@ -143,7 +143,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
         expires=60*30,
         secure=True,
         samesite="None",
-        domain="*.a.run.app",
+        domain="fullstack-rag-nextjs-service-esw7hvt5nq-ue.a.run.app",
         path="/"
     ) 
     return response

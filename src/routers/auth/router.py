@@ -174,3 +174,9 @@ def logout(response: Response):
         max_age=0  # Setting max_age to 0 effectively deletes the cookie
     )
     return {"message": "Logged out successfully"}
+
+@router.get("/check-cookies")
+def check_cookies(request: Request):
+    cookies = request.cookies
+    print("Received cookies:", cookies)
+    return {"cookies": cookies}

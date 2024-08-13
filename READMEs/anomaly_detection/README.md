@@ -51,3 +51,7 @@ Anomaly Detection
 - alembic revision --autogenerate -m "create logins table"
 
 - alembic upgrade head
+
+## Writing to the logins table
+
+- https://fastapi.tiangolo.com/tutorial/background-tasks/#create-a-task-function

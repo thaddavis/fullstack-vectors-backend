@@ -15,7 +15,7 @@ from langsmith import Client
 
 from dotenv import load_dotenv
 from pinecone import Pinecone
-import aiohttp
+from services import fetch_embedding
 
 load_dotenv()
 
@@ -44,19 +44,7 @@ async def generator(sessionId: str, prompt: str):
         sync_connection=sync_connection
     )
 
-    embedding = {}
-    async with aiohttp.ClientSession() as session:
-        print("EMBEDDING_API_URL")
-        print(os.getenv("EMBEDDING_API_URL"))
-        url = f"{os.getenv("EMBEDDING_API_URL")}/huggingface/embedding"
-        payload = {
-            "input": prompt
-        }
-        async with session.post(url, json=payload) as response:
-            result = await response.json()
-            print('--- --- ---')
-            print(result)
-            embedding = result['embedding']
+    embedding = await fetch_embedding(prompt) # fetch embedding from embedding service
 
     pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
     index = pc.Index(os.getenv("PINECONE_INDEX"))

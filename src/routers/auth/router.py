@@ -29,10 +29,13 @@ class Token(BaseModel):
     
     
 def authenticate(email: str, password: str, db):
+    print('authenticate()')
     account = db.query(Account).filter(Account.email == email).first()
     if not account:
+        print('if not account')
         return False
     if not bcrypt_context.verify(password, account.hashed_password):
+        print('if not bcrypt_context.verify')
         return False
     return account
 

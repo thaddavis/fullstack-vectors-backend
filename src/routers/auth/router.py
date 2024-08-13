@@ -135,7 +135,16 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     print('calling create_access_token()...')
     token = create_access_token(account.email, account.id, timedelta(minutes=20))
     response = Response()    
-    response.set_cookie(key="jwt", value=token, httponly=True, expires=60*20, secure=True, samesite="none", path="/") 
+    response.set_cookie(
+        key="jwt",
+        value=token,
+        httponly=True,
+        expires=60*20,
+        secure=True,
+        samesite="Strict",
+        domain=".a.run.app",
+        path="/"
+    ) 
     return response
 
 

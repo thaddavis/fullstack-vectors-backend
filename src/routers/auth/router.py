@@ -47,7 +47,8 @@ async def record_login(account_id: int, account_email: str, ip_address: str, db)
     print(f"Recording login for account... ")
 
     created_at = datetime.now()
-    log = f"{ip_address} {created_at}"
+    # log = f"{ip_address} {created_at}"
+    log = f"192.168.100.200 2023-03-01T05:22:45.123456-05:00"
     
     embedding = await fetch_embedding(log) # fetch embedding from EMBEDDING_API_URL
 
@@ -69,17 +70,15 @@ async def record_login(account_id: int, account_email: str, ip_address: str, db)
         },
     )
 
-    similarity_threshold = 0.6
-    is_suspicous = False
+    similarity_score = 1.0
 
     if len(results['matches']) > 0:
         print("login similarity score", results['matches'][0]['score'])
-        print("is_suspicious", results['matches'][0]['score'] < similarity_threshold)
         print("log", log)
 
-        is_suspicous = True if results['matches'][0]['score'] < similarity_threshold else False
+        similarity_score = results['matches'][0]['score']
 
-    db.add(Logins(account_id=account_id, ip_address=ip_address,is_suspicious=is_suspicous))
+    db.add(Logins(account_id=account_id, ip_address=ip_address,similarity_score=similarity_score))
     db.commit()
 
     # Insert the log into the Pinecone index

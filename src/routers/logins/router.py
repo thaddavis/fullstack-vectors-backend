@@ -11,8 +11,8 @@ router = APIRouter()
 def get_logins(db: db_dependency, user: user_dependency):
     print("---> get_workouts <---")
     print('user', user)
-    return db.query(Logins).filter(Logins.account_id == user.get('id')).all()
-
+    return db.query(Logins).filter(Logins.account_id == user.get('id')).order_by(Logins.created_at.desc()).all()
+    
 # @router.post("/", status_code=status.HTTP_201_CREATED)
 # def create_workout(db: db_dependency, user: user_dependency, workout: WorkoutCreate):
 #     db_workout = Workout(**workout.model_dump(), user_id=user.get('id'))

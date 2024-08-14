@@ -170,7 +170,7 @@ def logout(response: Response):
         samesite="None",
         # samesite="Strict",
         path="/",
-        domain="thealignmentagency.com",
+        domain=".thealignmentagency.com",
         max_age=0  # Setting max_age to 0 effectively deletes the cookie
     )
     return {"message": "Logged out successfully"}

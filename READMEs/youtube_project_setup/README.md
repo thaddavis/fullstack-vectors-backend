@@ -31,7 +31,14 @@ Documenting high-level steps of preparing project for YouTube video
 - Deployed both the `fullstack-rag-frontend` & `fullstack-rag-backend` to GCP Cloud Run
 - Setup CICD with GitHub Actions for both frontend and backend
 - Breaking out separate microservice for Hugging Face powered embeddings
+- ... ... .. <!-- FORGOT TO LOG A LOT -->
+- Mapping domain to cloud run services to hopefully fix http cookie not being sent
+  - `gcloud services enable cloudfunctions.googleapis.com`
+  - `gcloud services enable serverlessintegration.googleapis.com`
+- ... ... ... shifted approached to leverage local storage? NAW
 
 ## Interesting links
 
-https://www.youtube.com/watch?v=F5nlMBVZxb4
+- https://www.youtube.com/watch?v=F5nlMBVZxb4
+- https://www.invoca.com/blog/google-is-killing-third-party-cookies-heres-what-it-means-for-marketers
+- https://cloud.google.com/run/docs/integrate/custom-domain-load-balancer

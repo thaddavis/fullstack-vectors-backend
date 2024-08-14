@@ -20,6 +20,7 @@ Base.metadata.create_all(bind=engine)
 origins = [
     "http://localhost:3000",
     "https://localhost:3000",
+    "https://thealignmentagency.com",
     "https://fullstack-rag-nextjs-service-esw7hvt5nq-ue.a.run.app",
 ]
 

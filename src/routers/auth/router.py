@@ -143,6 +143,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
         expires=60*30,
         secure=True,
         samesite="None",
+        domain=".thealignmentagency.com",
         # domain=".a.run.app",
         path="/"
     ) 

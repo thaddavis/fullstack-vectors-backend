@@ -63,5 +63,10 @@ spec:
                 secretKeyRef:
                   name: OPENAI_API_KEY
                   key: latest
+            - name: COOKIE_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: COOKIE_DOMAIN
+                  key: latest
           ports:
             - containerPort: 8080

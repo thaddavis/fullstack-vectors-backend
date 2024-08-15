@@ -103,18 +103,19 @@ async def record_login(account_id: int, account_email: str, ip_address: str, db)
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user(db: db_dependency, create_account_request: AccountCreateRequest):
-    try:
-        hashed_password = bcrypt_context.hash(create_account_request.password)
-        create_account_model = Account(
-            email=create_account_request.email,
-            hashed_password=hashed_password
-        )
-        db.add(create_account_model)
-        db.commit()
-        db.refresh(create_account_model)
-    except Exception as e:
-        print('create_user error', e)
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail=str(e))
+    # try:
+    #     hashed_password = bcrypt_context.hash(create_account_request.password)
+    #     create_account_model = Account(
+    #         email=create_account_request.email,
+    #         hashed_password=hashed_password
+    #     )
+    #     db.add(create_account_model)
+    #     db.commit()
+    #     db.refresh(create_account_model)
+    # except Exception as e:
+    #     print('create_user error', e)
+    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     
 
 @router.post('/login')

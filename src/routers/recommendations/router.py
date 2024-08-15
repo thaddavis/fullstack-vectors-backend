@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query as FastAPIQuery
 from pydantic import BaseModel
 # from src.db.models import Workout
-from src.deps import db_dependency, user_dependency
+from src.deps import db_dependency, jwt_dependency
 from core.clients import pc
 import os
 import requests
@@ -12,7 +12,7 @@ class Query(BaseModel):
     text: str
 
 @router.post("/workouts")
-def workouts(user: user_dependency, query: Query):
+def workouts(jwt: jwt_dependency, query: Query):
     
     index = pc.Index(os.getenv("PINECONE_INDEX"))
     
@@ -32,7 +32,7 @@ def workouts(user: user_dependency, query: Query):
         include_metadata=True,
         namespace='workouts',
         filter={
-          "created_by": {"$ne": user.get('id')}
+          "created_by": {"$ne": jwt.get('id')}
           # "created_by": {"$ne": "r@pirate.ai"}
         },
     )

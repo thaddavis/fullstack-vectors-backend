@@ -26,8 +26,7 @@ class AccountCreateRequest(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
-    
-    
+
 def authenticate(email: str, password: str, db):
     print('authenticate()')
     account = db.query(Account).filter(Account.email == email).first()
@@ -144,8 +143,8 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
         expires=60*30,
         secure=True,
         samesite="None",
-        domain=".thealignmentagency.com",
-        # domain=".a.run.app",
+        # domain=".thealignmentagency.com",
+        domain=os.getenv("COOKIE_DOMAIN"),
         path="/"
     ) 
     return response

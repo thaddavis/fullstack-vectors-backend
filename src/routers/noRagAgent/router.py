@@ -11,6 +11,7 @@ from fastapi.responses import StreamingResponse
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.callbacks import LangChainTracer
 import psycopg
+from src.deps import jwt_dependency
 
 from dotenv import load_dotenv
 
@@ -73,6 +74,6 @@ async def generator(sessionId: str, prompt: str):
             }, separators=(',', ':'))
 
 @router.post("/completion")
-def prompt(prompt: ChatSessionPrompt):
+def prompt(prompt: ChatSessionPrompt, jwt: jwt_dependency):
     
     return StreamingResponse(generator(prompt.sessionId, prompt.content), media_type='text/event-stream')

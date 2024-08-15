@@ -13,6 +13,7 @@
 - ie: `echo -n "embedding api url" | gcloud secrets create EMBEDDING_API_URL --data-file=-`
 - ie: `echo -n "pinecone api key" | gcloud secrets create PINECONE_API_KEY --data-file=-`
 - ie: `echo -n "openai api key" | gcloud secrets create OPENAI_API_KEY --data-file=-`
+- ie: `echo -n "cookie domain" | gcloud secrets create COOKIE_DOMAIN --data-file=-`
 
 
 - CHECK OUT: `https://console.cloud.google.com/security/secret-manager?project=fullstack-rag`
@@ -28,36 +29,46 @@
 - gcloud secrets add-iam-policy-binding ANTHROPIC_API_KEY \
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
+
 - gcloud secrets add-iam-policy-binding POSTGRES_URL \   
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
+
 - gcloud secrets add-iam-policy-binding AUTH_SECRET_KEY \  
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
+
 - gcloud secrets add-iam-policy-binding AUTH_ALGORITHM \   
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
+
 - gcloud secrets add-iam-policy-binding LANGCHAIN_ENDPOINT \   
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
+
 - gcloud secrets add-iam-policy-binding LANGCHAIN_API_KEY \   
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
+
 - gcloud secrets add-iam-policy-binding EMBEDDING_API_URL \
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
+
 - gcloud secrets add-iam-policy-binding PINECONE_API_KEY \
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
+
 - gcloud secrets add-iam-policy-binding PINECONE_INDEX \
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 
-  - gcloud secrets add-iam-policy-binding OPENAI_API_KEY \
+- gcloud secrets add-iam-policy-binding OPENAI_API_KEY \
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 
-
+- gcloud secrets add-iam-policy-binding COOKIE_DOMAIN \
+  --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
 
   ## Steps to add a secret
 

@@ -40,4 +40,4 @@ async def get_current_user(request: Request):
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
     
-user_dependency = Annotated[dict, Depends(get_current_user)]
+jwt_dependency = Annotated[dict, Depends(get_current_user)]

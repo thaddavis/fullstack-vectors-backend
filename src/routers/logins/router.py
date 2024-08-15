@@ -3,18 +3,18 @@ from typing import Optional
 from fastapi import APIRouter, status
 
 from src.db.models import Logins
-from src.deps import db_dependency, user_dependency
+from src.deps import db_dependency, jwt_dependency
 
 router = APIRouter()
 
 @router.get('/')
-def get_logins(db: db_dependency, user: user_dependency):
+def get_logins(db: db_dependency, jwt: jwt_dependency):
     print("---> get_workouts <---")
-    print('user', user)
-    return db.query(Logins).filter(Logins.account_id == user.get('id')).order_by(Logins.created_at.desc()).all()
+    print('jwt', jwt)
+    return db.query(Logins).filter(Logins.account_id == jwt.get('id')).order_by(Logins.created_at.desc()).all()
     
 # @router.post("/", status_code=status.HTTP_201_CREATED)
-# def create_workout(db: db_dependency, user: user_dependency, workout: WorkoutCreate):
+# def create_workout(db: db_dependency, jwt: jwt_dependency, workout: WorkoutCreate):
 #     db_workout = Workout(**workout.model_dump(), user_id=user.get('id'))
 #     db.add(db_workout)
 #     db.commit()

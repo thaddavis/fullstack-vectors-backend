@@ -16,6 +16,7 @@ from langsmith import Client
 from dotenv import load_dotenv
 from pinecone import Pinecone
 from services import fetch_embedding
+from src.deps import jwt_dependency
 
 load_dotenv()
 
@@ -92,5 +93,6 @@ async def generator(sessionId: str, prompt: str):
             }, separators=(',', ':'))
 
 @router.post("/completion")
-def prompt(prompt: ChatSessionPrompt):
+def prompt(prompt: ChatSessionPrompt, jwt: jwt_dependency):
+    print(jwt)
     return StreamingResponse(generator(prompt.sessionId, prompt.content), media_type='text/event-stream')

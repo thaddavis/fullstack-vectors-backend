@@ -31,7 +31,7 @@ async def search_the_index(query: str) -> Dict:
             print(f"Error occurred during API request: {e}")
             return {}
         
-    index = pc.Index(os.getenv("PINECONE_INDEX"))
+    index = pc.Index(os.getenv("PINECONE_ALL_MINILM_L6_V2_INDEX"))
 
     results = index.query(
         vector=embedding,

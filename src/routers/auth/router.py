@@ -61,7 +61,7 @@ async def record_login(account_id: int, account_email: str, ip_address: str, db)
     print('embedding', len(embedding))
 
     pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
-    index = pc.Index(os.getenv("PINECONE_INDEX"))
+    index = pc.Index(os.getenv("PINECONE_ALL_MINILM_L6_V2_INDEX"))
 
     # Compare the log with the existing logs
 

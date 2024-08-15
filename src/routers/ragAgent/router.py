@@ -12,9 +12,9 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_postgres import PostgresChatMessageHistory
 from langchain.callbacks import LangChainTracer
 from langsmith import Client
+from core.clients import pc
 
 from dotenv import load_dotenv
-from pinecone import Pinecone
 from services import fetch_embedding
 from src.deps import jwt_dependency
 
@@ -47,8 +47,7 @@ async def generator(sessionId: str, prompt: str):
 
     embedding = await fetch_embedding(prompt) # fetch embedding from embedding service
 
-    pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
-    index = pc.Index(os.getenv("PINECONE_INDEX"))
+    index = pc.Index(os.getenv("PINECONE_ALL_MINILM_L6_V2_INDEX"))
 
     results = index.query(
         vector=embedding,

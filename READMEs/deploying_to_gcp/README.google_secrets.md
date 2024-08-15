@@ -58,7 +58,7 @@
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 
-- gcloud secrets add-iam-policy-binding PINECONE_INDEX \
+- gcloud secrets add-iam-policy-binding PINECONE_ALL_MINILM_L6_V2_INDEX \
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-from .routers import noRagAgent, ragAgent, reActAgent, healthcheck, auth, recommendations, logins
+from .routers import noRagAgent, ragAgent, reActAgent, healthcheck, auth, recommendations, logins, multimodal
 
 from .db.database import Base, engine
 
@@ -42,3 +42,5 @@ app.include_router(auth.router, prefix='/auth', tags=['auth'])
 
 app.include_router(recommendations.router, prefix="/recommendations", tags=['recommendations'])
 app.include_router(logins.router, prefix="/logins", tags=['logins'])
+
+app.include_router(multimodal.router, prefix="/multi-modal", tags=['multimodal'])

@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Query as FastAPIQuery
 from pydantic import BaseModel
-# from src.db.models import Workout
 from src.deps import db_dependency, jwt_dependency
 from core.clients import pc
 import os

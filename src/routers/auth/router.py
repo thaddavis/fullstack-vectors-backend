@@ -136,6 +136,9 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     token = create_access_token(account.email, account.id, timedelta(minutes=20))
     response = Response()
     print('response.set_cookie(...')
+
+    print('COOKIE_DOMAIN', os.getenv("COOKIE_DOMAIN"))
+
     response.set_cookie(
         key="jwt",
         value=token,

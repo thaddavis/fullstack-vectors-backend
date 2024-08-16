@@ -159,7 +159,6 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
 
 
 @router.get('/validate-token')
-@limiter.limit("5/minute")
 async def validate_token(request: Request, authorization: str = Header(...)):
     try:
         token = authorization.split(" ")[1] # Extract the token from the 'Bearer' scheme

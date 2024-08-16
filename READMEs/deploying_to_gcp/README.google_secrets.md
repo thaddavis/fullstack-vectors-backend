@@ -15,6 +15,10 @@
 - ie: `echo -n "openai api key" | gcloud secrets create OPENAI_API_KEY --data-file=-`
 - ie: `echo -n "cookie domain" | gcloud secrets create COOKIE_DOMAIN --data-file=-`
 
+- ie: `echo -n "all-minilm-l6-v2-384-dims" | gcloud secrets create PINECONE_ALL_MINILM_L6_V2_INDEX --data-file=-`
+- ie: `echo -n "imagebind-1024-dims" | gcloud secrets create PINECONE_IMAGEBIND_1024_DIMS_INDEX --data-file=-`
+
+
 
 - CHECK OUT: `https://console.cloud.google.com/security/secret-manager?project=fullstack-rag`
 
@@ -59,6 +63,10 @@
   --role="roles/secretmanager.secretAccessor"
 
 - gcloud secrets add-iam-policy-binding PINECONE_ALL_MINILM_L6_V2_INDEX \
+  --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+
+- gcloud secrets add-iam-policy-binding PINECONE_IMAGEBIND_1024_DIMS_INDEX \
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 

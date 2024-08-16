@@ -51,7 +51,7 @@ class SearchQuery(BaseModel):
     pass
 
 gptuesday_tool = StructuredTool(
-    name="gptuesday_tool",
+    name="search_gptuesday_vectors",
     description="A tool for accessing info related to the GPTuesday meetup and community.",
     func=search_the_index,
     coroutine=search_the_index,

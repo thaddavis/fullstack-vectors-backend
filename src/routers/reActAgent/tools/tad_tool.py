@@ -48,7 +48,7 @@ class SearchQuery(BaseModel):
     pass
 
 tad_tool = StructuredTool(
-    name="tad_tool",
+    name="search_tad_vectors_tool",
     description="A tool for accessing info related Tad Duval.",
     func=search_the_index,
     coroutine=search_the_index,

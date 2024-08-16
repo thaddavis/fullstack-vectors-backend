@@ -1,6 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from langchain_anthropic import ChatAnthropic
 from core.schemas.ChatSessionPrompt import ChatSessionPrompt
+
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 import json
 import os
@@ -18,6 +21,8 @@ from dotenv import load_dotenv
 from services import fetch_embedding
 from src.deps import jwt_dependency
 
+limiter = Limiter(key_func=get_remote_address)
+
 load_dotenv()
 
 callbacks = [
@@ -33,6 +38,9 @@ callbacks = [
 router = APIRouter()
 
 async def generator(sessionId: str, prompt: str):
+
+    print("---> generator called <---")
+
     model: str = "claude-3-sonnet-20240229"
     llm = ChatAnthropic(model_name=model, temperature=0.2, max_tokens=1024)
 
@@ -92,6 +100,6 @@ async def generator(sessionId: str, prompt: str):
             }, separators=(',', ':'))
 
 @router.post("/completion")
-def prompt(prompt: ChatSessionPrompt, jwt: jwt_dependency):
-    print(jwt)
+@limiter.limit("10/minute")
+def prompt(prompt: ChatSessionPrompt, jwt: jwt_dependency, request: Request):
     return StreamingResponse(generator(prompt.sessionId, prompt.content), media_type='text/event-stream')

@@ -1,6 +1,11 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.util import get_remote_address
 
 from .routers import noRagAgent, ragAgent, reActAgent, healthcheck, auth, recommendations, logins, multimodal
 
@@ -32,15 +37,48 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Create a Limiter instance
+limiter = Limiter(key_func=get_remote_address)
+
+# Add SlowAPI middleware to FastAPI app
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
+
 app.include_router(healthcheck.router, prefix="")
 
-app.include_router(noRagAgent.router, prefix="/no-rag-agent")
-app.include_router(ragAgent.router, prefix="/rag-agent")
-app.include_router(reActAgent.router, prefix="/react-agent")
+app.include_router(
+    noRagAgent.router,
+    prefix="/no-rag-agent",
+)
+app.include_router(
+    ragAgent.router,
+    prefix="/rag-agent",
+)
+app.include_router(
+    reActAgent.router,
+    prefix="/react-agent",
+)
 
-app.include_router(auth.router, prefix='/auth', tags=['auth'])
+app.include_router(
+    auth.router,
+    prefix='/auth',
+    tags=['auth'],
+)
 
-app.include_router(recommendations.router, prefix="/recommendations", tags=['recommendations'])
-app.include_router(logins.router, prefix="/logins", tags=['logins'])
+app.include_router(
+    recommendations.router,
+    prefix="/recommendations",
+    tags=['recommendations'],
+)
+app.include_router(
+    logins.router,
+    prefix="/logins",
+    tags=['logins'],
+)
 
-app.include_router(multimodal.router, prefix="/multi-modal", tags=['multimodal'])
+app.include_router(
+    multimodal.router,
+    prefix="/multi-modal",
+    tags=['multimodal'],
+)

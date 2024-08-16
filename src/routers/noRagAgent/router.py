@@ -1,6 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from langchain_anthropic import ChatAnthropic
 from langchain_postgres import PostgresChatMessageHistory
+
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
 from core.schemas.ChatSessionPrompt import ChatSessionPrompt
 
 import json
@@ -12,6 +16,8 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.callbacks import LangChainTracer
 import psycopg
 from src.deps import jwt_dependency
+
+limiter = Limiter(key_func=get_remote_address)
 
 from dotenv import load_dotenv
 
@@ -74,6 +80,6 @@ async def generator(sessionId: str, prompt: str):
             }, separators=(',', ':'))
 
 @router.post("/completion")
-def prompt(prompt: ChatSessionPrompt, jwt: jwt_dependency):
-    
+@limiter.limit("10/minute")
+def prompt(prompt: ChatSessionPrompt, jwt: jwt_dependency, request: Request):
     return StreamingResponse(generator(prompt.sessionId, prompt.content), media_type='text/event-stream')

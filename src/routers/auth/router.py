@@ -12,6 +12,11 @@ from services import fetch_embedding
 from src.deps import db_dependency, bcrypt_context
 from pinecone import Pinecone
 
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+limiter = Limiter(key_func=get_remote_address)
+
 load_dotenv()
 
 router = APIRouter()
@@ -101,7 +106,7 @@ async def record_login(account_id: int, account_email: str, ip_address: str, db)
     )
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_user(db: db_dependency, create_account_request: AccountCreateRequest):
+async def create_user(db: db_dependency, create_account_request: AccountCreateRequest, request: Request):
     raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail=str(e))
     # try:
     #     hashed_password = bcrypt_context.hash(create_account_request.password)
@@ -118,6 +123,7 @@ async def create_user(db: db_dependency, create_account_request: AccountCreateRe
     
 
 @router.post('/login')
+@limiter.limit("5/minute")
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                                  db: db_dependency,
                                  request: Request,
@@ -146,7 +152,6 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
         expires=60*30,
         secure=True,
         samesite="None",
-        # domain=".thealignmentagency.com",
         domain=os.getenv("COOKIE_DOMAIN"),
         path="/"
     ) 
@@ -154,7 +159,8 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
 
 
 @router.get('/validate-token')
-async def validate_token(authorization: str = Header(...)):
+@limiter.limit("5/minute")
+async def validate_token(request: Request, authorization: str = Header(...)):
     try:
         token = authorization.split(" ")[1] # Extract the token from the 'Bearer' scheme
         decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -165,16 +171,15 @@ async def validate_token(authorization: str = Header(...)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
     
 @router.post("/logout")
-def logout(response: Response):
+@limiter.limit("5/minute")
+def logout(request: Request, response: Response):
     response.set_cookie(
         key="jwt",
         value="",
         httponly=True,
         secure=True,
         samesite="None",
-        # samesite="Strict",
         path="/",
-        # domain=".thealignmentagency.com",
         domain=os.getenv("COOKIE_DOMAIN"),
         max_age=0  # Setting max_age to 0 effectively deletes the cookie
     )

@@ -1,8 +1,11 @@
 from typing import List
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 from .tools import serp_tool, gptuesday_tool, tad_tool
 from core.schemas.ChatSessionPrompt import ChatSessionPrompt
+
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 import json
 import os
@@ -18,6 +21,10 @@ from langchain.agents import AgentExecutor, create_openai_tools_agent
 from langchain_openai import ChatOpenAI
 from langchain_postgres import PostgresChatMessageHistory
 from langchain.memory import ConversationBufferMemory
+
+from src.deps import jwt_dependency
+
+limiter = Limiter(key_func=get_remote_address)
 
 from dotenv import load_dotenv
 
@@ -136,5 +143,6 @@ async def generator(sessionId: str, prompt: str):
             }, separators=(',', ':'))
 
 @router.post("/completion")
-def prompt(prompt: ChatSessionPrompt):
+@limiter.limit("10/minute")
+def prompt(prompt: ChatSessionPrompt, jwt: jwt_dependency, request: Request):
     return StreamingResponse(generator(prompt.sessionId, prompt.content), media_type='text/event-stream')

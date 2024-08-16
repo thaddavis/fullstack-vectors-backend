@@ -1,9 +1,14 @@
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Request, Response
 from pydantic import BaseModel
 import replicate
 from src.deps import jwt_dependency
 import os
 from core.clients import pc
+
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+limiter = Limiter(key_func=get_remote_address)
 
 router = APIRouter()
 
@@ -11,30 +16,20 @@ class Query(BaseModel):
     text: str
 
 @router.post("/media-assets/query")
-def media_library(response: Response, jwt: jwt_dependency, query: Query):
+@limiter.limit("10/minute")
+def media_library(request: Request, response: Response, jwt: jwt_dependency, query: Query):
     
-    print('---> query <---', query.text)
-
     output = replicate.run(
         "daanelson/imagebind:0383f62e173dc821ec52663ed22a076d9c970549c209666ac3db181618b7a304",
         input={
-            # vvv TEXT EXAMPLE vvv
+            # vvv vvv vvv
             "modality": "text",
             "text_input": query.text,
-            # ^^^ ^^^ ^^^
-            # vvv IMAGE EXAMPLE vvv
-            # "modality": "vision",
-            # "input": input
             # ^^^ ^^^ ^^^
         }
     )
 
     index = pc.Index(os.getenv("PINECONE_IMAGEBIND_1024_DIMS_INDEX"))
-
-    # print('output', output)
-    print()
-    print(len(output))
-    print()
 
     results = index.query(
         vector=output,
@@ -43,10 +38,6 @@ def media_library(response: Response, jwt: jwt_dependency, query: Query):
         include_metadata=True,
         namespace='media_assets'
     )
-
-    print()
-    print('results', results)
-    print()
 
     final_results = []
     for r in results['matches']:

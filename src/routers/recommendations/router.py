@@ -1,17 +1,23 @@
-from fastapi import APIRouter, Query as FastAPIQuery
+from fastapi import APIRouter, Query as FastAPIQuery, Request
 from pydantic import BaseModel
 from src.deps import db_dependency, jwt_dependency
+
 from core.clients import pc
 import os
 import requests
 
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+limiter = Limiter(key_func=get_remote_address)
 router = APIRouter()
 
 class Query(BaseModel):
     text: str
 
 @router.post("/workouts")
-def workouts(jwt: jwt_dependency, query: Query):
+@limiter.limit("10/minute")
+def workouts(jwt: jwt_dependency, query: Query, request: Request):
     
     index = pc.Index(os.getenv("PINECONE_ALL_MINILM_L6_V2_INDEX"))
     
@@ -32,7 +38,6 @@ def workouts(jwt: jwt_dependency, query: Query):
         namespace='workouts',
         filter={
           "created_by": {"$ne": jwt.get('id')}
-          # "created_by": {"$ne": "r@pirate.ai"}
         },
     )
 

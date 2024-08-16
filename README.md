@@ -1,6 +1,6 @@
 # TLDR
 
-FastAPI for "Fullstack R.A.G." course
+FastAPI for "Fullstack Vectors" course
 
 ## How to run the FastAPI
 

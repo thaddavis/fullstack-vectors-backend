@@ -20,6 +20,7 @@ from core.clients import pc
 from dotenv import load_dotenv
 from services import fetch_embedding
 from src.deps import jwt_dependency
+from datetime import datetime
 
 limiter = Limiter(key_func=get_remote_address)
 
@@ -67,7 +68,7 @@ async def generator(sessionId: str, prompt: str):
 
     promptTemplate = ChatPromptTemplate.from_messages(
         [
-            ("system", "You're a helpful assistant who reports factually accurate information related to the GPTuesday community. If information is not provided in the knowledge base regarding the prompt then do NOT fabricate an answer. Bold key terms in your responses."),
+            ("system", f"You're a helpful assistant who reports fact-based information related to the GPTuesday community. If information is not provided in the knowledge base regarding the prompt then do NOT fabricate an answer. Bold key terms in your responses. FYI today is {datetime.now().strftime('%Y-%m-%d')}"),
             MessagesPlaceholder(variable_name="history"),
             ("human", "{input}"),
         ]

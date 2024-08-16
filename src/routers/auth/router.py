@@ -139,7 +139,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     background_tasks.add_task(record_login, account.id, account.email, ip_address, db)
 
     print('calling create_access_token()...')
-    token = create_access_token(account.email, account.id, timedelta(minutes=20))
+    token = create_access_token(account.email, account.id, timedelta(hours=12))
     response = Response()
     print('response.set_cookie(...')
 

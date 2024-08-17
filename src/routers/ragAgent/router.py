@@ -42,7 +42,7 @@ async def generator(sessionId: str, prompt: str):
 
     print("---> generator called <---")
 
-    model: str = "claude-3-sonnet-20240229"
+    model: str = "claude-3-5-sonnet-20240620"
     llm = ChatAnthropic(model_name=model, temperature=0.2, max_tokens=1024)
 
     conn_info = os.getenv("POSTGRES_URL")

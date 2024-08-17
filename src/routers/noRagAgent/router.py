@@ -36,7 +36,7 @@ callbacks = [
 router = APIRouter()
 
 async def generator(sessionId: str, prompt: str):
-    model: str = "claude-3-sonnet-20240229"
+    model: str = "claude-3-5-sonnet-20240620"
     llm = ChatAnthropic(model_name=model, temperature=0.2, max_tokens=1024)
 
     conn_info = os.getenv("POSTGRES_URL")
@@ -50,7 +50,7 @@ async def generator(sessionId: str, prompt: str):
 
     promptTemplate = ChatPromptTemplate.from_messages(
         [
-            ("system", "You're an assistant."),
+            ("system", "You're an assistant. Bold key terms in your responses."),
             MessagesPlaceholder(variable_name="history"),
             ("human", "{input}"),
         ]

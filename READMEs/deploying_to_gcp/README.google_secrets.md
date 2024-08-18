@@ -14,6 +14,7 @@
 - ie: `echo -n "pinecone api key" | gcloud secrets create PINECONE_API_KEY --data-file=-`
 - ie: `echo -n "openai api key" | gcloud secrets create OPENAI_API_KEY --data-file=-`
 - ie: `echo -n "cookie domain" | gcloud secrets create COOKIE_DOMAIN --data-file=-`
+- ie: `echo -n "REPLICATE_API_TOKEN" | gcloud secrets create REPLICATE_API_TOKEN --data-file=-`
 
 - ie: `echo -n "all-minilm-l6-v2-384-dims" | gcloud secrets create PINECONE_ALL_MINILM_L6_V2_INDEX --data-file=-`
 - ie: `echo -n "imagebind-1024-dims" | gcloud secrets create PINECONE_IMAGEBIND_1024_DIMS_INDEX --data-file=-`
@@ -78,11 +79,22 @@
   --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 
+- gcloud secrets add-iam-policy-binding REPLICATE_API_TOKEN \
+  --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+
   ## Steps to add a secret
 
   1. Add it to the Google Secrets Manager
+    - ie: `echo -n "YOUR_SECRET_VALUE" | gcloud secrets create SECRET_NAME --data-file=-`
   2. Give the default google engine service account permissions to pull the secret at runtime
+  ```
+  gcloud secrets add-iam-policy-binding SECRET_ENV_VAR_VALUE \
+  --member="serviceAccount:370967482684-compute@developer.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+  ```
   3. Add the reference to the new secret in the service.yaml spec
+    - `gcloud run services replace service.yaml --region us-east1`
   4. After redeploying things should work
 
   FOR VERIFYING: https://console.cloud.google.com/run/detail/us-east1/fullstack-rag-fastapi-service/revisions?organizationId=355415429731&project=fullstack-rag

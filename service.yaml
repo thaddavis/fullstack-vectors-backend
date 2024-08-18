@@ -76,5 +76,10 @@ spec:
                 secretKeyRef:
                   name: COOKIE_DOMAIN
                   key: latest
+            - name: REPLICATE_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: REPLICATE_API_TOKEN
+                  key: latest
           ports:
             - containerPort: 8080

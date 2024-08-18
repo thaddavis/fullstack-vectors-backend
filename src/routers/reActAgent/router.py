@@ -68,7 +68,10 @@ async def generator(sessionId: str, prompt: str):
     )
 
     agent_executor = AgentExecutor(agent=agent, tools=tools, memory=memory).with_config(
-        {"run_name": "Agent"}
+        {
+            "run_name": "Agent",
+            "callbacks": callbacks
+        }
     )
 
     # EVENTS <!-- https://python.langchain.com/docs/expression_language/streaming/#event-reference -->

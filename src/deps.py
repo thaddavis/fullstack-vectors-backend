@@ -27,16 +27,32 @@ bcrypt_context = CryptContext(schemes=["sha256_crypt"])
 
 async def get_current_user(request: Request):
     try:
+
+        print("get_current_user")
+
         token = request.cookies.get("jwt")
+
+        print("token", token)
+
         if not token:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 
+        print('--- SECRET_KEY ---', SECRET_KEY)
+
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get('sub')
-        user_id: int = payload.get('id')
-        if username is None or user_id is None:
+
+        print()
+        print('--- payload ---', payload)
+        print()
+
+        email: str = payload.get('sub')
+        account_id: str = payload.get('id')
+        
+        print('--- email (sub) ---', email)
+        
+        if email is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
-        return {'username': username, 'id': user_id}
+        return {'username': email, 'id': account_id}
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
     

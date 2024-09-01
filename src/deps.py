@@ -52,6 +52,9 @@ async def get_current_user(request: Request):
         
         if email is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
+        
+        print("HIYAH!")
+
         return {'username': email, 'id': account_id}
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-from langchain_anthropic import ChatAnthropic
+# from langchain_anthropic import ChatAnthropic
 from langchain_postgres import PostgresChatMessageHistory
 
 from slowapi import Limiter
@@ -37,7 +37,7 @@ router = APIRouter()
 
 async def generator(sessionId: str, prompt: str):
     model: str = "claude-3-5-sonnet-20240620"
-    llm = ChatAnthropic(model_name=model, temperature=0.2, max_tokens=1024)
+    # llm = ChatAnthropic(model_name=model, temperature=0.2, max_tokens=1024)
 
     conn_info = os.getenv("POSTGRES_URL")
     sync_connection = psycopg.connect(conn_info)

@@ -7,7 +7,8 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
-from .routers import noRagAgent, ragAgent, reActAgent, healthcheck, auth, recommendations, logins, multimodal, sequentialSwarm
+# from .routers import noRagAgent, ragAgent, reActAgent, healthcheck, auth, recommendations, logins, multimodal, sequentialSwarm
+from .routers import noRagAgent, healthcheck, auth, recommendations, logins, multimodal, sequentialSwarm
 
 from .db.database import Base, engine
 
@@ -51,20 +52,20 @@ app.include_router(
     noRagAgent.router,
     prefix="/no-rag-agent",
 )
-app.include_router(
-    ragAgent.router,
-    prefix="/rag-agent",
-)
-app.include_router(
-    reActAgent.router,
-    prefix="/react-agent",
-)
+# app.include_router(
+#     ragAgent.router,
+#     prefix="/rag-agent",
+# )
+# app.include_router(
+#     reActAgent.router,
+#     prefix="/react-agent",
+# )
 
-app.include_router(
-    auth.router,
-    prefix='/auth',
-    tags=['auth'],
-)
+# app.include_router(
+#     auth.router,
+#     prefix='/auth',
+#     tags=['auth'],
+# )
 
 app.include_router(
     recommendations.router,

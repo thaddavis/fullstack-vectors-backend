@@ -48,7 +48,9 @@ callbacks = [
 
 router = APIRouter()
 
-async def generator(sessionId: str, prompt: str):
+async def generator(sessionId: str, prompt: str, agentsConfig: dict, flowConfig: str):
+
+    print('--- generator ---')
 
     # llm = Anthropic(anthropic_api_key=os.getenv("ANTHROPIC_API_KEY"), streaming=True)
     llm = OpenAIChatLLM(model='gpt-4o-mini', api_key=os.getenv("OPENAI_API_KEY"))
@@ -73,50 +75,53 @@ async def generator(sessionId: str, prompt: str):
 
     # vvv SEQUENTIAL SWARM vvv
 
-    agent1 = Agent(
-        agent_name="Blog generator",
-        system_prompt="Generate a complete blog post like Stephen King. Use markdown and bold key terms. End the blog with 'THE END'.",
-        llm=llm,
-        dashboard=False,
-    )
+    agents = []
+    
+    agentsConfigKeys = agentsConfig.keys()
 
-    agent2 = Agent(
-        agent_name="Summarizer",
-        system_prompt="Summarize the blog post. Use markdown and bold key terms.",
-        llm=llm,
-        dashboard=False,
-    )
+    for agentConfigKey in agentsConfigKeys:
+        agents.append(Agent(
+            agent_name=agentsConfig[agentConfigKey]['name'],
+            system_prompt=agentsConfig[agentConfigKey]['system_prompt'],
+            llm=llm,
+        ))
 
-    agents = [agent1, agent2]
-    flow = f"{agent1.name} -> {agent2.name}"
+    flow = flowConfig
 
     # ^^^ SEQUENTIAL SWARM ^^^
 
     # vvv PARALLEL SWARM vvv
 
-    writer1 = Agent(
-      agent_name="J.K. Rowling",
-      system_prompt="Generate a blog post in the style of J.K. Rowling",
-      llm=llm,
-      dashboard=False,
-    )
+    # writer1 = Agent(
+    #   agent_name="J.K. Rowling",
+    #   system_prompt="Write in the style of J.K. Rowling",
+    #   llm=llm,
+    #   dashboard=False,
+    # )
 
-    writer2 = Agent(
-        agent_name="Stephen King",
-        system_prompt="Generate a blog post in the style of Stephen King",
-        llm=llm,
-        dashboard=False
-    )
+    # writer2 = Agent(
+    #     agent_name="Stephen King",
+    #     system_prompt="Write in the style of Stephen King",
+    #     llm=llm,
+    #     dashboard=False
+    # )
 
-    reviewer = Agent(
-        agent_name="Reviewer",
-        system_prompt="Select the writer that wrote the best story. There can only be one best story.",
-        llm=llm,
-        dashboard=False
-    )
+    # writer3 = Agent(
+    #     agent_name="Salman Rushdie",
+    #     system_prompt="Write in the style of Salman Rushdie",
+    #     llm=llm,
+    #     dashboard=False
+    # )
 
-    agents = [writer1, writer2, reviewer]
-    flow = f"{writer1.name}, {writer2.name} -> {reviewer.name}"
+    # reviewer = Agent(
+    #     agent_name="Reviewer",
+    #     system_prompt="Select the writer that wrote the best. There can only be one best.",
+    #     llm=llm,
+    #     dashboard=False
+    # )
+
+    # agents = [writer1, writer2, writer3, reviewer]
+    # flow = f"{writer1.name}, {writer2.name}, {writer3.name} -> {reviewer.name}"
 
     # ^^^ PARALLEL SWARM ^^^
 
@@ -225,7 +230,7 @@ async def generator(sessionId: str, prompt: str):
                     f"SYSTEM: {agent.system_prompt}\nINPUT: {current_task}\nAI: ",
                     version="v1",
                 ):
-                    print(evt) # <- useful when building/debugging
+                    # print(evt) # <- useful when building/debugging
 
                     if evt["event"] == "on_chat_model_start":
                         yield json.dumps({
@@ -258,5 +263,5 @@ async def generator(sessionId: str, prompt: str):
 @limiter.limit("10/minute")
 def prompt(prompt: ChatSessionPrompt, jwt: jwt_dependency, request: Request):
     print('/sequential-swarm/completion')
-    print(prompt.sessionId, prompt.content)
-    return StreamingResponse(generator(prompt.sessionId, prompt.content), media_type='text/event-stream')
+    print(prompt.sessionId, prompt.content, prompt.agentsConfig, prompt.flow)
+    return StreamingResponse(generator(prompt.sessionId, prompt.content, prompt.agentsConfig, prompt.flow), media_type='text/event-stream')

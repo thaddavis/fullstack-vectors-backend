@@ -256,7 +256,15 @@ async def generator(sessionId: str, prompt: str, agentsConfig: dict, flowConfig:
 
                         # raise StopAsyncIteration
                     
-                current_task = result
+                current_task += (
+                        "# OUTPUT of "
+                        + agent_name
+                        + ""
+                        + result
+                        + "\n\n"
+                    )
+
+                # current_task = result
         loop_count += 1
 
 @router.post("/completion")

@@ -32,6 +32,7 @@ from swarms.models import Anthropic
 limiter = Limiter(key_func=get_remote_address)
 
 from dotenv import load_dotenv
+import uuid
 
 load_dotenv()
 
@@ -70,12 +71,13 @@ async def generator(sessionId: str, prompt: str):
     # )
     # messages = promptTemplate.format_messages(input=prompt, history=history.messages)
 
+    # vvv SEQUENTIAL SWARM vvv
+
     agent1 = Agent(
         agent_name="Blog generator",
         system_prompt="Generate a complete blog post like Stephen King. Use markdown and bold key terms. End the blog with 'THE END'.",
         llm=llm,
         dashboard=False,
-        # streaming_on=True
     )
 
     agent2 = Agent(
@@ -83,18 +85,53 @@ async def generator(sessionId: str, prompt: str):
         system_prompt="Summarize the blog post. Use markdown and bold key terms.",
         llm=llm,
         dashboard=False,
-        # streaming_on=True
     )
 
     agents = [agent1, agent2]
     flow = f"{agent1.name} -> {agent2.name}"
+
+    # ^^^ SEQUENTIAL SWARM ^^^
+
+    # vvv PARALLEL SWARM vvv
+
+    writer1 = Agent(
+      agent_name="J.K. Rowling",
+      system_prompt="Generate a blog post in the style of J.K. Rowling",
+      llm=llm,
+      dashboard=False,
+    )
+
+    writer2 = Agent(
+        agent_name="Stephen King",
+        system_prompt="Generate a blog post in the style of Stephen King",
+        llm=llm,
+        dashboard=False
+    )
+
+    reviewer = Agent(
+        agent_name="Reviewer",
+        system_prompt="Select the writer that wrote the best story. There can only be one best story.",
+        llm=llm,
+        dashboard=False
+    )
+
+    agents = [writer1, writer2, reviewer]
+    flow = f"{writer1.name}, {writer2.name} -> {reviewer.name}"
+
+    # ^^^ PARALLEL SWARM ^^^
+
     agents = {agent.name: agent for agent in agents}
     tasks = flow.split("->")
     current_task = prompt
     loop_count = 0
 
+    print('tasks', tasks)
+
     while loop_count < 1:
         for task in tasks:
+
+            print('task', task)
+
             agent_names = [
                 name.strip() for name in task.split(",")
             ]
@@ -103,6 +140,9 @@ async def generator(sessionId: str, prompt: str):
                 print(
                     f"Running agents in parallel: {agent_names}"
                 )
+
+                parallel_group_id = str(uuid.uuid4())
+
                 results = []
                 for agent_name in agent_names:
                     agent = agents[agent_name]
@@ -116,13 +156,50 @@ async def generator(sessionId: str, prompt: str):
                         current_task, version="v1"
                     ):
                         # print(evt) # <- useful when building/debugging
-                        if evt["event"] == "on_llm_end":
-                            result = evt["data"]["output"]
-                            print(agent.name, result)
+                        
+                        # if evt["event"] == "on_llm_end":
+                        #     result = evt["data"]["output"]
+                        #     print(agent.name, result)
+
+                        if evt["event"] == "on_chat_model_start":
+                            yield json.dumps({
+                                "parallel_group_id": parallel_group_id,
+                                "event": "on_chat_model_start",
+                                "run_id": evt['run_id'],
+                                "agent_name": agent.name
+                            }, separators=(',', ':'))
+
+                        elif evt["event"] == "on_chat_model_stream":
+                            yield json.dumps({
+                                "parallel_group_id": parallel_group_id,
+                                "event": "on_chat_model_stream",
+                                "run_id": evt['run_id'],
+                                "agent_name": agent.name,
+                                "data": evt["data"]['chunk'].content
+                            }, separators=(',', ':'))
+
+                        elif evt["event"] == "on_chat_model_end":
+                            result = evt["data"]["output"].content
+                            print(agent.name, "result", result)
+                            yield json.dumps({
+                                "event": "on_chat_model_end",
+                                "run_id": evt['run_id']
+                            }, separators=(',', ':'))
                     results.append(result)
 
                 current_task = ""
                 for index, res in enumerate(results):
+                    print("enumerating...")
+                    
+                    print('index', index)
+                    
+                    print('agent_names', agent_names),
+                    print('res', res)
+
+                    print()
+                    print('--- *** ---')
+                    print()
+
                     current_task += (
                         "# OUTPUT of "
                         + agent_names[index]
@@ -165,7 +242,7 @@ async def generator(sessionId: str, prompt: str):
                         }, separators=(',', ':'))
 
                     elif evt["event"] == "on_chat_model_end":
-                        result = evt["data"]["output"]
+                        result = evt["data"]["output"].content
                         print(agent.name, "result", result)
                         yield json.dumps({
                             "event": "on_chat_model_end",

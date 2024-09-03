@@ -8,7 +8,7 @@ from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
 # from .routers import noRagAgent, ragAgent, reActAgent, healthcheck, auth, recommendations, logins, multimodal, sequentialSwarm
-from .routers import noRagAgent, healthcheck, auth, recommendations, logins, multimodal, rearrangeSwarm
+from .routers import noRagAgent, healthcheck, auth, recommendations, logins, multimodal, rearrangeSwarm, spreadsheetSwarm
 
 from .db.database import Base, engine
 
@@ -88,4 +88,10 @@ app.include_router(
     rearrangeSwarm.router,
     prefix="/rearrange-swarm",
     tags=['Sequential Swarm'],
+)
+
+app.include_router(
+    spreadsheetSwarm.router,
+    prefix="/spreadsheet-swarm",
+    tags=['Spreadsheet Swarm'],
 )

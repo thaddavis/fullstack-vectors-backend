@@ -5,7 +5,7 @@ from langchain_postgres import PostgresChatMessageHistory
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-from core.schemas.ChatSessionPrompt import ChatSessionPrompt
+from core.schemas.RearrangeSwarmPrompt import RearrangeSwarmPrompt
 
 import json
 import os
@@ -269,7 +269,7 @@ async def generator(sessionId: str, prompt: str, agentsConfig: dict, flowConfig:
 
 @router.post("/completion")
 @limiter.limit("10/minute")
-def prompt(prompt: ChatSessionPrompt, jwt: jwt_dependency, request: Request):
-    print('/sequential-swarm/completion')
+def prompt(prompt: RearrangeSwarmPrompt, jwt: jwt_dependency, request: Request):
+    print('/rearrange-swarm/completion')
     print(prompt.sessionId, prompt.content, prompt.agentsConfig, prompt.flow)
     return StreamingResponse(generator(prompt.sessionId, prompt.content, prompt.agentsConfig, prompt.flow), media_type='text/event-stream')

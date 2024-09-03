@@ -1,5 +1,5 @@
 {
-    "name": "Fullstack R.A.G. FastAPI Devcontainer",
+    "name": "A.I. FastAPI Devcontainer",
     "build": {
       "dockerfile": "../Dockerfile.dev"
     },
